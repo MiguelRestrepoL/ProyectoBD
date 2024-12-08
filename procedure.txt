@@ -1,0 +1,35 @@
+PROCEDURE
+
+DELIMITER //
+
+CREATE PROCEDURE sp_InsertarAgenda(
+    IN p_fecha DATE,
+    IN p_hora_inicio TIME,
+    IN p_hora_fin TIME,
+    IN p_num_aula INT,
+    IN p_id_grupo VARCHAR(10)
+)
+BEGIN
+    INSERT INTO Agenda (Fecha, Hora_Inicio, Hora_Fin, Num_Aula, ID_Grupo) 
+    VALUES (p_fecha, p_hora_inicio, p_hora_fin, p_num_aula, p_id_grupo);
+END //
+
+DELIMITER ;
+
+CALL sp_InsertarAgenda('2024-12-11', '08:00', '10:00', 1011, '51');
+
+DELIMITER //
+
+CREATE PROCEDURE sp_ActualizarAula(
+    IN p_num_aula INT,
+    IN p_estado VARCHAR(50)
+)
+BEGIN
+    UPDATE Aula
+    SET Estado_Aula = p_estado
+    WHERE Num_Aula = p_num_aula;
+END //
+
+DELIMITER ;
+
+CALL sp_ActualizarAula(1021, 'Disponible');

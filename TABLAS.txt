@@ -1,0 +1,94 @@
+TABLAS
+
+CREATE TABLE Aula (
+    Num_Aula SERIAL PRIMARY KEY,
+    Capacidad INT NOT NULL CHECK (Capacidad > 0),
+    Piso_Aula INT NOT NULL,
+    Estado_Aula VARCHAR(50) NOT NULL CHECK (Estado_Aula IN ('Disponible', 'Ocupada', 'Mantenimiento'))
+);
+
+CREATE TABLE Profesor (
+    ID_Profesor SERIAL PRIMARY KEY,
+    Primer_Nombre VARCHAR(50) NOT NULL,
+    Segundo_Nombre VARCHAR(50),
+    Primer_Apellido VARCHAR(50) NOT NULL,
+    Segundo_Apellido VARCHAR(50),
+    Profesion VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Horario (
+    ID_Horario SERIAL PRIMARY KEY,
+    Dia_Semana VARCHAR(15) NOT NULL CHECK (Dia_Semana IN ('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes')),
+    Hora_Inicio TIME NOT NULL,
+    Hora_Fin TIME NOT NULL CHECK (Hora_Fin > Hora_Inicio)
+);
+
+CREATE TABLE Curso (
+    ID_Curso SERIAL PRIMARY KEY,
+    Nombre_Curso VARCHAR(100) NOT NULL,
+    Grupo_Curso VARCHAR(50) NOT NULL,
+    Jornada VARCHAR(50) NOT NULL,
+    CupoEstudiantes INT NOT NULL CHECK (CupoEstudiantes > 0),
+    Profesor_Asignado INT NOT NULL,
+    FOREIGN KEY (Profesor_Asignado) REFERENCES Profesor(ID_Profesor)
+);
+
+CREATE TABLE Estudiante (
+    Cod_Estudiante SERIAL PRIMARY KEY,
+    DNI_Estudiante VARCHAR(15) UNIQUE NOT NULL,
+    Primer_Nombre VARCHAR(50) NOT NULL,
+    Segundo_Nombre VARCHAR(50),
+    Primer_Apellido VARCHAR(50) NOT NULL,
+    Segundo_Apellido VARCHAR(50),
+    Semestre_Cursante INT NOT NULL CHECK (Semestre_Cursante > 0),
+    Direccion VARCHAR(200),
+    E_mail VARCHAR(100) NOT NULL,
+    Telefono VARCHAR(15)
+);
+
+CREATE TABLE Agenda (
+    ID_Agenda SERIAL PRIMARY KEY,
+    Fecha DATE NOT NULL,
+    Hora_Inicio TIME NOT NULL,
+    Hora_Fin TIME NOT NULL CHECK (Hora_Fin > Hora_Inicio),
+    Num_Aula INT NOT NULL,
+    ID_Grupo INT NOT NULL,
+    FOREIGN KEY (Num_Aula) REFERENCES Aula(Num_Aula)
+);
+
+CREATE TABLE Agenda_Profesor (
+    ID_Agenda INT NOT NULL,
+    ID_Profesor INT NOT NULL,
+    Disponibilidad BOOLEAN NOT NULL,
+    PRIMARY KEY (ID_Agenda, ID_Profesor),
+    FOREIGN KEY (ID_Agenda) REFERENCES Agenda(ID_Agenda),
+    FOREIGN KEY (ID_Profesor) REFERENCES Profesor(ID_Profesor)
+);
+
+CREATE TABLE Profesor_Horario (
+    ID_Profesor INT NOT NULL,
+    ID_Horario INT NOT NULL,
+    Jornada VARCHAR(50) NOT NULL,
+    PRIMARY KEY (ID_Profesor, ID_Horario),
+    FOREIGN KEY (ID_Profesor) REFERENCES Profesor(ID_Profesor),
+    FOREIGN KEY (ID_Horario) REFERENCES Horario(ID_Horario)
+);
+
+CREATE TABLE Curso_Horario (
+    ID_Horario INT NOT NULL,
+    ID_Curso INT NOT NULL,
+    Sesion VARCHAR(50) NOT NULL,
+    PRIMARY KEY (ID_Horario, ID_Curso),
+    FOREIGN KEY (ID_Horario) REFERENCES Horario(ID_Horario),
+    FOREIGN KEY (ID_Curso) REFERENCES Curso(ID_Curso)
+);
+
+CREATE TABLE Estudiante_Curso (
+    ID_Estudiante INT NOT NULL,
+    ID_Curso INT NOT NULL,
+    Estado VARCHAR(50) NOT NULL,
+    Modalidad VARCHAR(50) NOT NULL,
+    PRIMARY KEY (ID_Estudiante, ID_Curso),
+    FOREIGN KEY (ID_Estudiante) REFERENCES Estudiante(Cod_Estudiante),
+    FOREIGN KEY (ID_Curso) REFERENCES Curso(ID_Curso)
+);

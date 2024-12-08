@@ -1,0 +1,25 @@
+creacion y eliminacion de la base de datos
+
+Borrar la base de datos si existe
+
+DROP DATABASE IF EXISTS gestion_academica;
+
+Crear la base de datos
+
+CREATE DATABASE gestion_academica;
+
+Conectar a la base de datos creada
+\c gestion_academica;
+
+para borrar tablas
+
+Borrar las tablas en el orden correcto
+DROP TABLE IF EXISTS Estudiante_Curso;
+DROP TABLE IF EXISTS Curso_Horario;
+DROP TABLE IF EXISTS Profesor_Horario;
+DROP TABLE IF EXISTS Agenda;
+DROP TABLE IF EXISTS Curso;
+DROP TABLE IF EXISTS Estudiante;
+DROP TABLE IF EXISTS Profesor;
+DROP TABLE IF EXISTS Aula;
+DROP TABLE IF EXISTS Horario;

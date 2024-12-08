@@ -1,0 +1,23 @@
+INDICES
+
+indice para buscar por Nombre de Estudiante
+
+CREATE INDEX idx_estudiante_nombre
+ON Estudiante (Primer_Nombre, Primer_Apellido);
+
+script para la consulta
+
+SELECT * 
+FROM Estudiante 
+WHERE Primer_Nombre = 'Juan' AND Primer_Apellido = 'Pérez';
+
+indice para reñacion de llave foranea
+
+CREATE INDEX idx_estudiante_curso
+ON Estudiante_Curso (ID_Estudiante, ID_Curso);
+
+scipt para la consulta
+
+SELECT * 
+FROM Estudiante_Curso 
+WHERE ID_Curso = 5;

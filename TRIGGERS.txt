@@ -1,0 +1,65 @@
+creacion tabla auditoria
+
+NSERT: Cuando se inserte un estudiante en la tabla Estudiante, el trigger registrará el nuevo estudiante en la tabla Auditoria_Estudiante.
+
+UPDATE: Cuando se actualice un estudiante, el trigger registrará los datos antes y después del cambio.
+
+DELETE: Cuando se elimine un estudiante, el trigger registrará los datos eliminados.
+
+
+CREATE TABLE Auditoria_Estudiante (
+    ID_Auditoria SERIAL PRIMARY KEY,
+    Cod_Estudiante INT,
+    Accion VARCHAR(50) NOT NULL,
+    Fecha_Hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Usuario VARCHAR(50),
+    Detalles JSONB
+);
+
+creacion de una funcion para registrar cambios
+
+CREATE OR REPLACE FUNCTION registrar_auditoria()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO Auditoria_Estudiante (Cod_Estudiante, Accion, Usuario, Detalles)
+        VALUES (NEW.Cod_Estudiante, 'INSERT', SESSION_USER, ROW_TO_JSON(NEW));
+    ELSIF TG_OP = 'UPDATE' THEN
+        INSERT INTO Auditoria_Estudiante (Cod_Estudiante, Accion, Usuario, Detalles)
+        VALUES (NEW.Cod_Estudiante, 'UPDATE', SESSION_USER, JSONB_BUILD_OBJECT('Antes', ROW_TO_JSON(OLD), 'Despues', ROW_TO_JSON(NEW)));
+    ELSIF TG_OP = 'DELETE' THEN
+        INSERT INTO Auditoria_Estudiante (Cod_Estudiante, Accion, Usuario, Detalles)
+        VALUES (OLD.Cod_Estudiante, 'DELETE', SESSION_USER, ROW_TO_JSON(OLD));
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+creacion de trigger
+
+CREATE TRIGGER trigger_auditoria_estudiante
+AFTER INSERT OR UPDATE OR DELETE
+ON Estudiante
+FOR EACH ROW
+EXECUTE FUNCTION registrar_auditoria();
+
+ejemplo de uso
+
+Insertar un estudiante
+
+INSERT INTO Estudiante (Cod_Estudiante, Primer_Nombre, Primer_Apellido)
+VALUES (1, 'Juan', 'Pérez');
+
+Actualizar un estudiante
+
+UPDATE Estudiante SET Primer_Nombre = 'Carlos' WHERE Cod_Estudiante = 1;
+
+Eliminar un estudiante
+
+DELETE FROM Estudiante WHERE Cod_Estudiante = 1;
+
+
+
+
+
+

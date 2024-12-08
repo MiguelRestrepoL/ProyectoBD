@@ -1,0 +1,56 @@
+Scripts para vistas(JOINS)
+
+Creacion de vista de Curso con su profesor asignado
+
+CREATE OR REPLACE VIEW Vista_Cursos_Profesores AS
+SELECT 
+    Curso.Nombre_Curso,
+    Curso.Grupo_Curso,
+    Profesor.Primer_Nombre || ' ' || Profesor.Primer_Apellido AS Profesor_Asignado
+FROM Curso
+JOIN Profesor ON Curso.Profesor_Asignado = Profesor.ID_Profesor;
+
+Consulta la vista
+
+SELECT * FROM Vista_Cursos_Profesores;
+
+Vista de estudiantes inscritos en cursos
+
+CREATE OR REPLACE VIEW vista_estudiantes_cursos AS
+SELECT 
+    e.Cod_Estudiante,
+    e.Primer_Nombre || ' ' || e.Primer_Apellido AS Nombre_Completo,
+    e.Correo,
+    c.Nombre_Curso,
+    c.Grupo_Curso,
+    c.Jornada
+FROM 
+    Estudiante e
+JOIN 
+    Estudiante_Curso ec ON e.Cod_Estudiante = ec.ID_Estudiante
+JOIN 
+    Curso c ON ec.ID_Curso = c.ID_Curso;
+
+Consulta la vista
+
+SELECT * FROM vista_estudiantes_cursos;
+
+Vista de horarios por profesor
+
+CREATE OR REPLACE VIEW vista_horarios_profesores AS
+SELECT 
+    p.ID_Profesor,
+    p.Primer_Nombre || ' ' || p.Primer_Apellido AS Nombre_Completo,
+    h.Dia_Semana,
+    h.Hora_Inicio,
+    h.Hora_Fin
+FROM 
+    Profesor p
+JOIN 
+    Profesor_Horario ph ON p.ID_Profesor = ph.ID_Profesor
+JOIN 
+    Horario h ON ph.ID_Horario = h.ID_Horario;
+
+consulta la vista
+ 
+SELECT * FROM vista_horarios_profesores ORDER BY Nombre_Completo;

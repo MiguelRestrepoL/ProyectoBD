@@ -1,0 +1,19 @@
+MODIFICACIONES
+
+agrega una columna a una tabla existente
+
+ALTER TABLE Estudiante ADD COLUMN Fecha_Inscripcion DATE DEFAULT CURRENT_DATE;
+
+ALTER TABLE Profesor ADD COLUMN Telefono_Alternativo VARCHAR(15);
+
+renombrar una columna
+
+ALTER TABLE Estudiante RENAME COLUMN E_mail TO Correo;
+
+ALTER TABLE Aula RENAME COLUMN Estado_Aula TO Estado;
+
+renombra una tabla
+
+ALTER TABLE Profesor RENAME TO Docente;
+
+ALTER TABLE Agenda RENAME TO Calendario;
